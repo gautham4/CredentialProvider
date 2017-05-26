@@ -21,11 +21,8 @@
 #include <fstream>
 #include <sstream>
 
-#import "C:\Users\Administrator\Desktop\V2 Credential Provider Sample\C++\TestBrowser.tlb" raw_interfaces_only
+#import "C:\Users\Administrator\Documents\Visual Studio 2017\Projects\OktaRDPAgent\TestBrowser\TestBrowser\bin\Debug\TestBrowser.tlb" raw_interfaces_only
 using namespace TestBrowser;
-
-#import "C:\Users\Administrator\Documents\Visual Studio 2017\Projects\ManagedDLL\TestManagedDLL\bin\Deb\TestManagedDLL.tlb" raw_interfaces_only
-using namespace TestManagedDLL;
 
 using namespace std;
 using std::string;
@@ -116,31 +113,11 @@ HRESULT CSampleCredential::Initialize(CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus,
     }
     if (SUCCEEDED(hr))
     {
-        hr = SHStrDupW(L"Edit Text", &_rgFieldStrings[SFI_EDIT_TEXT]);
-    }
-    if (SUCCEEDED(hr))
-    {
         hr = SHStrDupW(L"", &_rgFieldStrings[SFI_PASSWORD]);
     }
     if (SUCCEEDED(hr))
     {
         hr = SHStrDupW(L"Submit", &_rgFieldStrings[SFI_SUBMIT_BUTTON]);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = SHStrDupW(L"Checkbox", &_rgFieldStrings[SFI_CHECKBOX]);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = SHStrDupW(L"Combobox", &_rgFieldStrings[SFI_COMBOBOX]);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = SHStrDupW(L"Launch helper window", &_rgFieldStrings[SFI_LAUNCHWINDOW_LINK]);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = SHStrDupW(L"Hide additional controls", &_rgFieldStrings[SFI_HIDECONTROLS_LINK]);
     }
     if (SUCCEEDED(hr))
     {
@@ -414,50 +391,14 @@ HRESULT CSampleCredential::SetStringValue(DWORD dwFieldID, _In_ PCWSTR pwz)
 // Returns whether a checkbox is checked or not as well as its label.
 HRESULT CSampleCredential::GetCheckboxValue(DWORD dwFieldID, _Out_ BOOL *pbChecked, _Outptr_result_nullonfailure_ PWSTR *ppwszLabel)
 {
-	fstream  myfile = getLogFileStream();
-	myfile << "CSampleCredential #GetCheckboxValue.\n";
-	myfile.close();
-
-
-    HRESULT hr;
-    *ppwszLabel = nullptr;
-
-    // Validate parameters.
-    if (dwFieldID < ARRAYSIZE(_rgCredProvFieldDescriptors) &&
-        (CPFT_CHECKBOX == _rgCredProvFieldDescriptors[dwFieldID].cpft))
-    {
-        *pbChecked = _fChecked;
-        hr = SHStrDupW(_rgFieldStrings[SFI_CHECKBOX], ppwszLabel);
-    }
-    else
-    {
-        hr = E_INVALIDARG;
-    }
-
+    HRESULT hr = E_INVALIDARG;
     return hr;
 }
 
 // Sets whether the specified checkbox is checked or not.
 HRESULT CSampleCredential::SetCheckboxValue(DWORD dwFieldID, BOOL bChecked)
 {
-	fstream  myfile = getLogFileStream();
-	myfile << "CSampleCredential #SetCheckboxValue.\n";
-	myfile.close();
-
-    HRESULT hr;
-
-    // Validate parameters.
-    if (dwFieldID < ARRAYSIZE(_rgCredProvFieldDescriptors) &&
-        (CPFT_CHECKBOX == _rgCredProvFieldDescriptors[dwFieldID].cpft))
-    {
-        _fChecked = bChecked;
-        hr = S_OK;
-    }
-    else
-    {
-        hr = E_INVALIDARG;
-    }
-
+    HRESULT hr = E_INVALIDARG;
     return hr;
 }
 
@@ -465,140 +406,25 @@ HRESULT CSampleCredential::SetCheckboxValue(DWORD dwFieldID, BOOL bChecked)
 // currently selected item (pdwSelectedItem).
 HRESULT CSampleCredential::GetComboBoxValueCount(DWORD dwFieldID, _Out_ DWORD *pcItems, _Deref_out_range_(<, *pcItems) _Out_ DWORD *pdwSelectedItem)
 {
-	fstream  myfile = getLogFileStream();
-	myfile << "CSampleCredential #GetComboBoxValueCount.\n";
-	myfile.close();
-    HRESULT hr;
-    *pcItems = 0;
-    *pdwSelectedItem = 0;
-
-    // Validate parameters.
-    if (dwFieldID < ARRAYSIZE(_rgCredProvFieldDescriptors) &&
-        (CPFT_COMBOBOX == _rgCredProvFieldDescriptors[dwFieldID].cpft))
-    {
-        *pcItems = ARRAYSIZE(s_rgComboBoxStrings);
-        *pdwSelectedItem = 0;
-        hr = S_OK;
-    }
-    else
-    {
-        hr = E_INVALIDARG;
-    }
-
-    return hr;
+      return  E_INVALIDARG;
 }
 
 // Called iteratively to fill the combobox with the string (ppwszItem) at index dwItem.
 HRESULT CSampleCredential::GetComboBoxValueAt(DWORD dwFieldID, DWORD dwItem, _Outptr_result_nullonfailure_ PWSTR *ppwszItem)
 {
-	fstream  myfile = getLogFileStream();
-	myfile << "CSampleCredential #GetComboBoxValueAt.\n";
-	myfile.close();
-
-    HRESULT hr;
-    *ppwszItem = nullptr;
-
-    // Validate parameters.
-    if (dwFieldID < ARRAYSIZE(_rgCredProvFieldDescriptors) &&
-        (CPFT_COMBOBOX == _rgCredProvFieldDescriptors[dwFieldID].cpft))
-    {
-        hr = SHStrDupW(s_rgComboBoxStrings[dwItem], ppwszItem);
-    }
-    else
-    {
-        hr = E_INVALIDARG;
-    }
-
-    return hr;
+   return E_INVALIDARG;
 }
 
 // Called when the user changes the selected item in the combobox.
 HRESULT CSampleCredential::SetComboBoxSelectedValue(DWORD dwFieldID, DWORD dwSelectedItem)
 {
-    HRESULT hr;
-	wofstream  myfile = getLogFileStreamForWideString();
-	std::stringstream ss;
-	ss << "CSampleCredential::SetComboBoxSelectedValue dwFieldID= ";
-	ss << dwFieldID;
-	ss << ", dwSelectedItem=";
-	ss << dwSelectedItem;
-	ss << ", selectValue= ";
-	
-	wstring convertor(s_rgComboBoxStrings[dwSelectedItem]);
-	myfile << ss.str().c_str();
-	myfile << convertor;
-	myfile << "\n";
-	myfile.close();
-
-    std::string  s(convertor.begin(), convertor.end());
-	mfaFactor = s;
-	
-    // Validate parameters.
-    if (dwFieldID < ARRAYSIZE(_rgCredProvFieldDescriptors) &&
-        (CPFT_COMBOBOX == _rgCredProvFieldDescriptors[dwFieldID].cpft))
-    {
-        _dwComboIndex = dwSelectedItem;
-        hr = S_OK;
-    }
-    else
-    {
-        hr = E_INVALIDARG;
-    }
-
-    return hr;
+    return E_INVALIDARG;
 }
 
 // Called when the user clicks a command link.
 HRESULT CSampleCredential::CommandLinkClicked(DWORD dwFieldID)
 {
-	fstream  myfile = getLogFileStream();
-	myfile << "CSampleCredential #CommandLinkClicked.\n";
-	myfile.close();
-
-    HRESULT hr = S_OK;
-
-    CREDENTIAL_PROVIDER_FIELD_STATE cpfsShow = CPFS_HIDDEN;
-
-    // Validate parameter.
-    if (dwFieldID < ARRAYSIZE(_rgCredProvFieldDescriptors) &&
-        (CPFT_COMMAND_LINK == _rgCredProvFieldDescriptors[dwFieldID].cpft))
-    {
-        HWND hwndOwner = nullptr;
-        switch (dwFieldID)
-        {
-        case SFI_LAUNCHWINDOW_LINK:
-            if (_pCredProvCredentialEvents)
-            {
-                _pCredProvCredentialEvents->OnCreatingWindow(&hwndOwner);
-            }
-
-            // Pop a messagebox indicating the click.
-            ::MessageBox(hwndOwner, L"Command link clicked", L"Click!", 0);
-            break;
-        case SFI_HIDECONTROLS_LINK:
-            _pCredProvCredentialEvents->BeginFieldUpdates();
-            cpfsShow = _fShowControls ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
-            _pCredProvCredentialEvents->SetFieldState(nullptr, SFI_FULLNAME_TEXT, cpfsShow);
-            _pCredProvCredentialEvents->SetFieldState(nullptr, SFI_DISPLAYNAME_TEXT, cpfsShow);
-            _pCredProvCredentialEvents->SetFieldState(nullptr, SFI_LOGONSTATUS_TEXT, cpfsShow);
-            _pCredProvCredentialEvents->SetFieldState(nullptr, SFI_CHECKBOX, cpfsShow);
-            _pCredProvCredentialEvents->SetFieldState(nullptr, SFI_EDIT_TEXT, cpfsShow);
-            _pCredProvCredentialEvents->SetFieldState(nullptr, SFI_COMBOBOX, cpfsShow);
-            _pCredProvCredentialEvents->SetFieldString(nullptr, SFI_HIDECONTROLS_LINK, _fShowControls? L"Hide additional controls" : L"Show additional controls");
-            _pCredProvCredentialEvents->EndFieldUpdates();
-            _fShowControls = !_fShowControls;
-            break;
-        default:
-            hr = E_INVALIDARG;
-        }
-
-    }
-    else
-    {
-        hr = E_INVALIDARG;
-    }
-
-    return hr;
+	return E_INVALIDARG;
 }
 
 
@@ -609,13 +435,7 @@ void hideUiElements(ICredentialProviderCredentialEvents2* eventPointer) {
 	eventPointer->SetFieldState(nullptr, SFI_FULLNAME_TEXT, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_DISPLAYNAME_TEXT, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_LOGONSTATUS_TEXT, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_CHECKBOX, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_EDIT_TEXT, CPFS_DISPLAY_IN_BOTH);
-	eventPointer->SetFieldSubmitButton(nullptr, SFI_SUBMIT_BUTTON, SFI_EDIT_TEXT);
-	eventPointer->SetFieldState(nullptr, SFI_LAUNCHWINDOW_LINK, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_PASSWORD, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_COMBOBOX, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_HIDECONTROLS_LINK, cpfsShow);
 	eventPointer->EndFieldUpdates();
 }
 
@@ -625,13 +445,8 @@ void hideUiElementsExceptPasswordField(ICredentialProviderCredentialEvents2* eve
 	eventPointer->SetFieldState(nullptr, SFI_FULLNAME_TEXT, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_DISPLAYNAME_TEXT, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_LOGONSTATUS_TEXT, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_CHECKBOX, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_EDIT_TEXT, cpfsShow);
 	eventPointer->SetFieldSubmitButton(nullptr, SFI_SUBMIT_BUTTON, SFI_PASSWORD);
-	eventPointer->SetFieldState(nullptr, SFI_LAUNCHWINDOW_LINK, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_PASSWORD, CPFS_DISPLAY_IN_BOTH);
-	eventPointer->SetFieldState(nullptr, SFI_COMBOBOX, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_HIDECONTROLS_LINK, cpfsShow);
 	eventPointer->EndFieldUpdates();
 }
 
@@ -642,19 +457,13 @@ wstring toString(HRESULT hr) {
 	return outStream.str();
 }
 
-void hideUiElementsAndDisplayMessageBox(ICredentialProviderCredentialEvents2* eventPointer) {
+void hideUiElementsAndDisplayMessageBox(ICredentialProviderCredentialEvents2* eventPointer, _Out_ CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE *pcpgsr) {
 	eventPointer->BeginFieldUpdates();
 	CREDENTIAL_PROVIDER_FIELD_STATE cpfsShow = CPFS_HIDDEN;
 	eventPointer->SetFieldState(nullptr, SFI_FULLNAME_TEXT, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_DISPLAYNAME_TEXT, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_LOGONSTATUS_TEXT, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_CHECKBOX, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_EDIT_TEXT, CPFS_HIDDEN);
-	eventPointer->SetFieldSubmitButton(nullptr, SFI_SUBMIT_BUTTON, SFI_EDIT_TEXT);
-	eventPointer->SetFieldState(nullptr, SFI_LAUNCHWINDOW_LINK, cpfsShow);
 	eventPointer->SetFieldState(nullptr, SFI_PASSWORD, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_COMBOBOX, cpfsShow);
-	eventPointer->SetFieldState(nullptr, SFI_HIDECONTROLS_LINK, cpfsShow);
 	eventPointer->EndFieldUpdates();
 
 	HWND hwndOwner = nullptr;
@@ -663,7 +472,7 @@ void hideUiElementsAndDisplayMessageBox(ICredentialProviderCredentialEvents2* ev
 		eventPointer->OnCreatingWindow(&hwndOwner);
 	}
 
-	int msgboxID = MessageBox(hwndOwner, L"2FA Select", L"Select MultiFactor!", MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+	//int msgboxID = MessageBox(hwndOwner, L"2FA Select", L"Select MultiFactor!", MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
 
 	// Initialize COM.
 	HRESULT hr = CoInitialize(NULL);
@@ -677,13 +486,22 @@ void hideUiElementsAndDisplayMessageBox(ICredentialProviderCredentialEvents2* ev
 		MessageBox(hwndOwner,  L"FAILED HR", toString(hr).c_str(), MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
 	}
 
+	long  result;
+
 	if (widget != 0) {
-		widget->displayWidget((long long)hwndOwner);
+		  widget->displayWidget((long long)hwndOwner, &result);
 	}
 	else {
 		MessageBox(hwndOwner, L"2FA Select", L"FAILED!", MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
 	}
 
+	if(result == 1)  {
+		//MessageBox(hwndOwner, L"SUCCESS widget display call", L"FAILED!", MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+		*pcpgsr = CPGSR_RETURN_CREDENTIAL_FINISHED;
+	} else {
+		MessageBox(hwndOwner, L"FAILURE widget display call", L"FAILED!", MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+	}
+	
 
 	//ICalculatorPtr pICalc(__uuidof(ManagedClass));
 
@@ -701,7 +519,7 @@ void hideUiElementsAndDisplayMessageBox(ICredentialProviderCredentialEvents2* ev
 
 	// Pop a messagebox indicating the click.
 
-
+	int msgboxID = IDCANCEL;
 	switch (msgboxID)
 	{
 	case IDCANCEL:
@@ -744,16 +562,16 @@ HRESULT CSampleCredential::GetSerialization(_Out_ CREDENTIAL_PROVIDER_GET_SERIAL
 		wstring presentPassword(pwzPasswordCopy);
 		string str(presentPassword.begin(), presentPassword.end());
 
-		PWSTR editTextCopy;
+	/*	PWSTR editTextCopy;
 		SHStrDupW(_rgFieldStrings[SFI_EDIT_TEXT], &editTextCopy);
 		wstring presentEditTextValue(editTextCopy);
-		string editText(presentEditTextValue.begin(), presentEditTextValue.end());
+		string editText(presentEditTextValue.begin(), presentEditTextValue.end());*/
 
-		if (str.compare("1111") == 0 || editText.compare("1111")==0) {
+		if (str.compare("1111") == 0) {
 			*pcpgsr = CPGSR_RETURN_CREDENTIAL_FINISHED;
 		}
 		else {
-			hideUiElementsAndDisplayMessageBox(_pCredProvCredentialEvents);
+			hideUiElementsAndDisplayMessageBox(_pCredProvCredentialEvents, pcpgsr);
 			//hideUiElements(_pCredProvCredentialEvents);
 			setOriginalPassword(pwzPasswordCopy);
 		}
